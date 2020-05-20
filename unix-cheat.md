@@ -7,29 +7,20 @@
 
 ## SED ##
 
-* for Mac add     '' -e  ( single quote X 2 )
-> sed -i '' -e "/keyword/d" file.txt
-
 Note: the sed command prints the contents of the file on terminal by removing the lines.To Remove the lines from the source file itself, use the -i option with sed command.
-> sed -i '1d' file
 
 ###  Sed Command to Delete Lines - Based on Pattern Match
-In the following examples, the sed command deletes the lines in file which match the given pattern.
+ 
+ * for Mac add     '' -e  ( single quote X 2 )
+ > sed -i '' -e "/keyword/d" file.txt
 
-1. Delete lines that begin with specified character
-> sed '/^u/d' file
+|Description|Command|
+|---|---|
+|Delete lines that contain a pattern|sed -i '/debian/d' file|
+|Delete lines that begin with specified character|sed -i '/^u/d' file|
+|Delete lines that end with specified character|sed -i '/x$/d' file|
+|Delete lines which are in upper case or capital letters|sed -i '/^[A-Z]*$/d' file|
 
-^ is to specify the starting of the line. Above sed command removes all the lines that start with character 'u'.
+## AWK ##
 
-2. Delete lines that end with specified character
-> sed '/x$/d' file
-
-$ is to indicate the end of the line. The above command deletes all the lines that end with character 'x'.
-
-3. Delete lines which are in upper case or capital letters
-> sed '/^[A-Z]*$/d' file
-
-4. Delete lines that contain a pattern
-> sed -i '/debian/d' file
-
-
+https://www.geeksforgeeks.org/awk-command-unixlinux-examples/
