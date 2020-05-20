@@ -7,7 +7,7 @@
 
 ## SED ##
 
-* for Mac add     '' -e  
+* for Mac add     '' -e  ( single quote X 2 )
 > sed -i '' -e "/keyword/d" file.txt
 
 Note: the sed command prints the contents of the file on terminal by removing the lines.To Remove the lines from the source file itself, use the -i option with sed command.
