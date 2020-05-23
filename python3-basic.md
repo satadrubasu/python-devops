@@ -19,9 +19,9 @@ Readability counts
     3. [Dict](#collections_dict)
     4. [For-loop](#collections_for)
 3. [Modularity](#modular)
-    1. [replace](#modular_)
-    2. [replace](#modular_)
-    3. [replace](#modular_)
+    1. [replace](#modular_func)
+    2. [replace](#modular_name)
+    3. [replace](#modular_cmd)
     4. [replace](#modular_)
     5. [replace](#modular_)
     
@@ -172,13 +172,75 @@ Using break
 
 ##  3 Modularity in Python <a name="modular"></a>
 
+  If we import a python file without functions , just during import statement it executes the entire File.Hence the need of functions.
+  
+  \__feature__ is called dunder : double underscore  
+  
   Reusable Functions  
   Source code files called modules  
   Modules used from other modules  
   Python Execution model ( parameters)  
   Making programs executable    
 
-###  3.1 Modularity in Python <a name="modular_"></a>
-###  3.2 Modularity in Python <a name="modular_"></a>
-###  3.3 Modularity in Python <a name="modular_"></a>
-###  3.4 Modularity in Python <a name="modular_"></a>
+###  3.1 Defining functions   <a name="modular_func"></a>
+
+Ideal not to print but return some value.
+```
+def cube(x):
+    return x*x*x
+```
+
+###  3.2 \__Name\__ <a name="modular_name"></a>
+ dunder name : Special variable allows to detect whether a module is run as a script or imported into another module.  
+ 
+ print(\__name\__) behaviour :  
+ |When|Output|  
+ |---|---|  
+ |import sample|sample|  
+ |import sample|No output as sample was already imported and printed the module name on  first time|  
+ |python sample.py|\__main\__|  
+ 
+ 
+ So to ensure flow of code when a python script is executed from shell python <scriptname.py>
+ ```
+  if __name__ == '__main__':
+      fetch_workds()  
+ ```
+ 
+###  3.3 Python Command line Model <a name="modular_cmd"></a>
+ Refer to samply.py for reference
+ 
+   ```
+   if __name__ == '__main__':
+    ## run this program with sample.py https://raw.githubusercontent.com/satadrubasu/Unix-PythonReference/master/resources/sample.txt
+    ## From SHELL : python sample.py 
+    ## From REPL : import sample
+    ## From REPL : main('https://raw.githubusercontent.com/satadrubasu/Unix-PythonReference/master/resources/sample.txt')
+    main(sys.argv[1])
+   ```
+
+###  3.4 Python docstrings <a name="modular_doc"></a>
+ 
+* The first line of a block ( function / module / class ) to have comments in triple double quotes
+* Tool like Sphinx to create HTML documentation from python docstrings
+* see help in interpreter :   
+     > from sample import \*  
+ 
+     > help(fetch_words)  
+     
+
+   ```
+    """ 
+     def fetch_words(url):
+     Fetchs list of words , read from a passed URL.
+
+        Args:
+            url: The URL of a UTF-8 text Document
+
+        Returns:
+            List of strings containing the words from the document.
+    """
+   ```
+###  3.5 Python docstrings <a name="modular_shbang"></a>
+
+* Locate Python Using PATH : #!/usr/bin/env python3
