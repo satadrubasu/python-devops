@@ -11,48 +11,60 @@ Readability counts
 # Table of contents
 1. [Basic Elements](#basicElements)  
     1.[Types](#basicElements_types)  
-    2.[Relational Operators](#basicElements_relational)  
+    2.[Relational Operators](#basicElements_relational)
     3.[While loop](#basicElements_while)  
-2. [String,Collections,for-loop](#collections)  
-    1. [String - immutable](#collections_str)  
-        1.[String concatenation via join() best practice](#collections_str_join)  
-        2.[String split via partition() best practice](#collections_str_part)  
-        3.[String format() usage](#collections_str_format)  
-        4.[String format f-strings usage](#collections_str_fstring)  
-    2. [Lists](#collections_list)  
-        1.[Slicing a list](#collections_list_slice)  
-    3. [Dict](#collections_dict)  
-    4. [For-loop](#collections_for)  
-        1. [enumerate](#collections_for_enum)  
-    5. [tuple](#collections_tuple)  
-    6. [range](#collections_range)  
-    7. [set](#collections_set)  
-3. [Modularity](#modular)  
-    1. [def Functions](#modular_func)  
-    2. [\__name\__](#modular_name)  
-    3. [sys.argv[]](#modular_cmd)  
-    4. [docstring](#modular_doc)  
-    5. [shebang](#modular_shbang)  
-4. [Object and Types](#object)  
-    1. [arguments and return](#object_args)  
-    2. [Function arguments](#object_func)  
-    3. [Type Check](#object_type)  
-    4. [Scopes](#object_scope)  
+2. [String,Collections,for-loop](#collections)
+    1. [String - immutable](#collections_str)
+        1.[String concatenation via join() best practice](#collections_str_join)
+        2.[String split via partition() best practice](#collections_str_part)
+        3.[String format() usage](#collections_str_format)
+        4.[String format f-strings usage](#collections_str_fstring)
+    2. [Lists](#collections_list)
+        1.[Slicing a list](#collections_list_slice)
+    3. [Dict](#collections_dict)
+    4. [For-loop](#collections_for)
+        1. [enumerate](#collections_for_enum)
+    5. [tuple](#collections_tuple)
+    6. [range](#collections_range)
+    7. [set](#collections_set)
+3. [Modularity](#modular)
+    1. [def Functions](#modular_func)
+    2. [\__name\__](#modular_name)
+    3. [sys.argv[]](#modular_cmd)
+    4. [docstring](#modular_doc)
+    5. [shebang](#modular_shbang)
+4. [Object and Types](#object)
+    1. [arguments and return](#object_args)
+    2. [Function arguments](#object_func)
+    3. [Type Check](#object_type)
+    4. [Scopes](#object_scope)
+    
+5. [Class](#class)
+    1. [Define new Class](#class_define)
+    2. [Instance Methods](#class_instancemethods)
+        1. Adding to Classes
+        2. self argument
+    3. [Initializers](#class_initializers)
+        1. Contrast with constructors
+        2. Collaborating Classes
+    4. [Polymorphism / Interfaces and Implementations / Duck Typing](#class_interface)
+    5. [Inheritance](#class_inheritance)
 
+    
 
-## Some Basic Operators varations <a name="basicElements"></a>  
+## Some Basic Operators varations <a name="basicElements"></a>
 
 a / b = return floating point  
-a // b = return only the integral part ( no rounding off )  
+a // b = return only the integral part ( no rounding off )
 
-## 1.1 Scalar Types ( Basic ) <a name="basicElements_types"></a>  
+## 1.1 Scalar Types ( Basic ) <a name="basicElements_types"></a>
 1. __int__  
   
   __int as constructor__  
      
      ```
      int(3.5) = 3  ( rounding is always close to 0)   
-     int("234") = 243  
+     int("234") = 243
      ```  
   
 2. __float__   
@@ -490,6 +502,82 @@ By the core concept , the k is now pointing to a new value object reference.Whil
 |Scope order|SHort|Scope|Description|  
 |---|---|---|---|  
 |Narrowest|L|Local|Inside the current function|  
-|Narrower|E|Enclosing|Inside Enclosing functions|  
-|Broader|B|Global|Top level of module|  
-|Boradest|G|Built-in|In the special built in modules|  
+|Narrower|E|Enclosing|Inside Enclosing functions|
+|Broader|B|Global|Top level of module|
+|Boradest|G|Built-in|In the special built in modules|
+
+## 5 Classes <a name="class"></a>    
+ 
+   1. All is public : No public / private / protected   
+   2. Constructor forawrds parameter to matching initializers.  
+   3. Class Invariants can be used by init() to ensure some rules are followed while creating an object ,else throw ValueError.    
+
+### 5.1 Define a new class <a name="class_define"></a>    
+
+  Consider __airtravel.py__ having the following class definition of Flight.
+  ```
+     class Flight:
+          pass
+  ```
+      > f = Flight()    
+      > type(f) will return  <class 'airtravel.Flight'>
+
+### 5.2 Instance Methods <a name="class_instancemethods"></a>    
+  2. [](#class_instancemethods)
+  
+      Refer to airtravel.py 
+      1. All methods to a class level having self reference
+
+### 5.3 Class \_init_() <a name="class_initializers"></a>   
+   
+   > 1. \__init__() is an initializer of already created object and not a constructor.Constructor forwards parameters to initializers.    
+   > 2. Note how self._number create a new instance attribute with _number.
+   > 3. init should not return anything but only create/modify self.(objects)
+   > 4. A function and object attribute are both objects so attribute name and functionname MUST not be same.
+   > 5. _variable naming convention to identify objects that should not be modified by client to the objects.
+
+    ```
+       class Flight:
+          
+         def __init__(self,number):
+             self._number = number
+     ```
+### 5.4 Interfaces and Implementations / DuckTyping <a name="class_interface"></a>  
+
+ Polymorphism - Using Objects of different types via common Interfaces.   
+ Applies to Objects and Functions both.  
+ 
+ __Duck Typing in python__  
+ Suitability is not defined by interfaces or inheritance , but by parameters at point in runtime.This is where its different from JAVA.  
+ 
+ > Refer to airtravel.py  
+ 
+
+### 5.5 Class Inheritance <a name="class_inheritance"></a>  
+
+```
+class Aircraft:
+    """ Base Class to Airbus and Boeing
+        Can't be initialized
+        the self reference is not present , expects some implementation class to provide
+    """
+    def num_seats(self):
+        rows,row_seats = self.seating_plan()
+        return len(rows) * len(row_seats)
+
+
+class Boeing777(Aircraft):
+""" num_seats is inherited from Base Class Aircraft """
+    def __init__(self,registration):
+        self._registration = registration
+
+    def registration(self,registration):
+        return self._registration
+
+    def model(self):
+        return "Boeing777"
+
+    def seating_plan(self):
+        return (range(1, 56), "ABCDEFGHJK")
+
+```
