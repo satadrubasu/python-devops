@@ -11,46 +11,48 @@ Readability counts
 # Table of contents
 1. [Basic Elements](#basicElements)  
     1.[Types](#basicElements_types)  
-    2.[Relational Operators](#basicElements_relational)
+    2.[Relational Operators](#basicElements_relational)  
     3.[While loop](#basicElements_while)  
-2. [String,Collections,for-loop](#collections)
-    1. [String - immutable](#collections_str)
-        1.[String concatenation via join() best practice](#collections_str_join)
-        2.[String split via partition() best practice](#collections_str_part)
-        3.[String format() usage](#collections_str_format)
-        4.[String format f-strings usage](#collections_str_fstring)
-    2. [Lists](#collections_list)
-        1.[Slicing a list](#collections_list_slice)
-    3. [Dict](#collections_dict)
-    4. [For-loop](#collections_for)
-        1. [enumerate](#collections_for_enum)
-    5. [tuple](#collections_tuple)
-    6. [range](#collections_range)
-    7. [set](#collections_set)
-3. [Modularity](#modular)
-    1. [def Functions](#modular_func)
-    2. [\__name\__](#modular_name)
-    3. [sys.argv[]](#modular_cmd)
-    4. [docstring](#modular_doc)
-    5. [shebang](#modular_shbang)
-4. [Object and Types](#object)
-    1. [arguments and return](#object_args)
-    2. [Function arguments](#object_func)
-    3. [Type Check](#object_type)
-    4. [Scopes](#object_scope)
+2. [String,Collections,for-loop](#collections)  
+    1. [String - immutable](#collections_str)  
+        1.[String concatenation via join() best practice](#collections_str_join)  
+        2.[String split via partition() best practice](#collections_str_part)  
+        3.[String format() usage](#collections_str_format)  
+        4.[String format f-strings usage](#collections_str_fstring)  
+    2. [Lists](#collections_list)  
+        1.[Slicing a list](#collections_list_slice)  
+    3. [Dict](#collections_dict)  
+    4. [For-loop](#collections_for)  
+        1. [enumerate](#collections_for_enum)  
+    5. [tuple](#collections_tuple)  
+    6. [range](#collections_range)  
+    7. [set](#collections_set)  
+3. [Modularity](#modular)  
+    1. [def Functions](#modular_func)  
+    2. [\__name\__](#modular_name)  
+    3. [sys.argv[]](#modular_cmd)  
+    4. [docstring](#modular_doc)  
+    5. [shebang](#modular_shbang)  
+4. [Object and Types](#object)  
+    1. [arguments and return](#object_args)  
+    2. [Function arguments](#object_func)  
+    3. [Type Check](#object_type)  
+    4. [Scopes](#object_scope)  
     
-5. [Class](#class)
-    1. [Define new Class](#class_define)
-    2. [Instance Methods](#class_instancemethods)
-        1. Adding to Classes
-        2. self argument
-    3. [Initializers](#class_initializers)
-        1. Contrast with constructors
-        2. Collaborating Classes
-    4. [Polymorphism / Interfaces and Implementations / Duck Typing](#class_interface)
-    5. [Inheritance](#class_inheritance)
+5. [Class](#class)  
+    1. [Define new Class](#class_define)  
+    2. [Instance Methods](#class_instancemethods)  
+        1. Adding to Classes  
+        2. self argument  
+    3. [Initializers](#class_initializers)  
+        1. Contrast with constructors  
+        2. Collaborating Classes  
+    4. [Polymorphism / Interfaces and Implementations / Duck Typing](#class_interface)  
+    5. [Inheritance](#class_inheritance)  
 
-    
+6. [Files IO and resource managemnt](#files)  
+    1. [Define new Class](#files_basic)  
+    2. [Context Managers : with open () as f](#iles_context)
 
 ## Some Basic Operators varations <a name="basicElements"></a>
 
@@ -145,6 +147,8 @@ Using break
 ### 2.1 str ( String Literals) ( Is Unicode UTF-8 supports all languages ) <a name="collections_str"></a>  
 
    Key Note : String are immutable in python too. So to capitalize a variable you have to catch the return.  
+   String supports slicing as they implement the sequence protocol
+     
    ```
    name = 'satadru'  
    capitalized_name = name.capitalize()  
@@ -544,9 +548,9 @@ By the core concept , the k is now pointing to a new value object reference.Whil
      ```
 ### 5.4 Interfaces and Implementations / DuckTyping <a name="class_interface"></a>  
 
- Polymorphism - Using Objects of different types via common Interfaces.   
- Applies to Objects and Functions both.  
- 
+ Polymorphism - Using Objects of different types via common Interfaces. Applies to Objects and Functions both.    
+ Polymorphism in Python is preferred via ducktyping rather than traditional inheritance from base classes.  
+ Class Inheritance is more useful in sharing implementation rather than acheiving polymorphism.(airtravel_inherit.py)  
  __Duck Typing in python__  
  Suitability is not defined by interfaces or inheritance , but by parameters at point in runtime.This is where its different from JAVA.  
  
@@ -581,3 +585,59 @@ class Boeing777(Aircraft):
         return (range(1, 56), "ABCDEFGHJK")
 
 ```
+
+## 6 Files I/O and Resource Management <a name="files"></a>   
+
+   1. Resource : Program Elements that must be closed or released after use.
+   2. Pythons offering for automatic resource management ( __Context Managers__ )
+   3. Core functions of opening file (Text Mode vs Binary Mode)
+
+
+### 6.1 File Operations <a name="files_basic"></a>  
+
+  Default Encoding - sys.getdefaultencoding() - utf-8  
+  
+  |MODE|MEANING|  
+  |---|---|  
+  |r|reading|  
+  |w|writing|  
+  |a|open for appending|  
+  |SELECTOR|MEANING|  
+  |b|binary Mode|  
+  |t|text Mode|  
+  
+  ```
+    fstream = open('filename.txt',mode='wt',encoding='utf-8')  
+    fstream = fstream.write('First Line written\n')  
+    fstrem.close()
+
+    fileReader = open('filename.txt',mode='rt' , encoding='utf-8')
+    fileReader.readline()   # read till first \n char and return
+    fileReader.readline()   # further calls after reaching eol return empty.
+``` 
+  
+  If enough memory , read all lines into  list:  
+   ['line1\n','lastline']  
+  > fileReader.readlines()
+
+  File Iterators:  
+   Observe not using print(line)  -- which adda an empty line while printing on console.  
+  ```
+   import sys  
+   try:
+       f = open('afile.txt',mode='rt',encoding='utf-8')  
+           for line in f:  
+               sys.stdout.write(line)  
+    finally:
+        f.close()  
+  ```  
+
+### 6.2 Context Managers : with-block <a name="files_context"></a>
+
+ Observe how no try / catch / finally block needed
+  ```
+   import sys  
+       with open('afile.txt',mode='rt',encoding='utf-8')  as f:
+           for line in f:  
+               sys.stdout.write(line)  
+  ```   
