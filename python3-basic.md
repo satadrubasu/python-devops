@@ -37,8 +37,7 @@ Readability counts
     1. [arguments and return](#object_args)  
     2. [Function arguments](#object_func)  
     3. [Type Check](#object_type)  
-    4. [Scopes](#object_scope)  
-    
+    4. [Scopes](#object_scope)     
 5. [Class](#class)  
     1. [Define new Class](#class_define)  
     2. [Instance Methods](#class_instancemethods)  
@@ -49,10 +48,10 @@ Readability counts
         2. Collaborating Classes  
     4. [Polymorphism / Interfaces and Implementations / Duck Typing](#class_interface)  
     5. [Inheritance](#class_inheritance)  
-
 6. [Files IO and resource managemnt](#files)  
-    1. [Define new Class](#files_basic)  
+    1. [Files - Basic](#files_basic)  
     2. [Context Managers : with open () as f](#iles_context)
+7. [Iterable and Iterators](#iterate)
 
 ## Some Basic Operators varations <a name="basicElements"></a>
 
@@ -239,7 +238,7 @@ Using break
     for key in colors:   
         print(f"{key} => {colors[key]}")  
 
-    for key,value in colors:   
+    for key,value in colors.items():   
         print(f"{key} => {value}")  
  ```
 * "red" in colors_dict  
@@ -591,6 +590,7 @@ class Boeing777(Aircraft):
    1. Resource : Program Elements that must be closed or released after use.
    2. Pythons offering for automatic resource management ( __Context Managers__ )
    3. Core functions of opening file (Text Mode vs Binary Mode)
+   4. Callers responsible for new lines.
 
 
 ### 6.1 File Operations <a name="files_basic"></a>  
@@ -641,3 +641,150 @@ class Boeing777(Aircraft):
            for line in f:  
                sys.stdout.write(line)  
   ```   
+
+
+## 7 Iterations and Iterables<a name="iterate"></a>   
+
+   1. [Comprehensions : ( Concise syntax for describing lists/sets and dictionaries)](#iterate_tools)
+         - create familiar objects
+         - create new kinds of objects
+         - Filtering
+   2. [Low Level Iterable API - Iterators ( Iteration Protocols)](#iterate_protocols)
+   3. [Generator Functions](#iterate_generator)
+         - Yield keyword
+         - Statefullness / Laziness & infitine sequences
+         - Generator Expressions
+   4. [Iteration Tools](#iterate_tools)
+         - any / all
+         - zip ( imagine CSV , different columns merged to present a multi column data)
+
+#### 7.1.1 List(Ordered by insertion) / Set(Unordered) Comprehensions <a name="iterate_comprehension"></a> 
+
+  Using the Square Bracket for Lists:  
+     [expr(item) for item in iterable]    
+  
+  Using the Curly Braces for Sets:  
+     {expr(item) for item in iterable}  
+   ``` 
+      words = "Take me home alabama".split()  
+      words = ['My','Complete'......,'delimiters']  
+   ```
+ 
+  Below list comprehension will print the length of each word in the words list [4, 2, 4, 7]  
+   >  [len(word) for word in words]  
+  
+  Below list comprehension will print upper case of each word in the words list  ['TAKE', 'ME', 'HOME', 'ALABAMA']  
+   > [word.upper() for word in words] 
+
+   Below list comprehension will print a list having string lenght of resultnt factorial coming from range(20)    
+   > f = [len(str(factorial(x))) for x in range(20)]
+
+#### 7.1.2 Dict Comprehensions
+
+   - {  
+         key_expr(item): value_expr(item)  
+         for item in __iterable__  
+      }
+   
+   - we cannot use the dict object directly but do tuple unpacking by using:  
+    dict.items()
+
+  E.g from a dictionary of Country-> Captial , say we want to form a captial based lookup. Capital->Country
+  
+  ```
+    country_to_cap = {"India":"New Delhi","Australia":"Sydney","Sri Lanka":"Colombo","England":"London"}
+    cap_to_country = { capi:cntry for cntry,capi in country_to_cap.items()}
+  ```
+
+#### 7.1.3 Filtering Comprehensions  
+
+  Using the Square Bracket for Lists:  
+     [expr(item) for item in iterable if <condition>]  
+     
+
+### 7.2 Iteration Protocols <a name="iterate_protocols"></a>  
+
+   - StopIteration Exception
+|Iterable|Iterator|
+|---|---|
+|Can be passed to __iter()__ to produce an iterator|Can be passed to __next()__ to get the next value in sequence|
+
+> iterable = ['Cricket','Football','Table Tennis']  
+> iterator  = iter(iterable)  
+> next(iterator)  = Cricket  
+> next(iterator)  = Football  
+> next(iterator)  = Table Tennis  
+  
+> next(iterator)  = StopIteration Exception  
+
+
+|Finite Seqeunce|Infinite Sequence|  
+|---|---|  
+|Reaches the end will throw the StopIteration Exception||  
+
+
+### 7.3 Generator Functions <a name="iterate_generator"></a>  
+  
+ Consider Like a defined ENUM in java IS a SEQUENCE
+
+   - Iterables defined by functions , does throw StopIteration if next(lastSequenceOfObject)    
+   - Lazy evaluation  
+   - Can model sequences with no definite end ( e.g log files etc )  
+   - Composable in to pipelines  
+   - Must include at least one __yield__ statement , may also include return  
+  
+  ``` 
+     def genSports():
+         print('About to yield ')
+         yield 'Cricket'
+         print('About to yield ')
+         yield 'Basketball'
+         print('About to yield ')
+         yield 'Tennis'
+
+     ### Usage 1 ###
+     sportIter = genSports()
+     next(sportIter)
+     
+     #### Usage 2 ###
+     for sport in genSports():
+         print(f"{sport}")
+
+  ```
+
+ ### 7.4 Iterator Tools ( any / all ) <a name="iterate_tools"></a>  
+ 
+   - any / all  
+   - zip  
+ 
+ #### 7.4.1 any / all   
+  
+ any([False,False,True])  = True  
+ all([False,False,True])  = False  
+ 
+ "Starting Letter is Capital".title()  == true  
+ 
+ Combined with a Comprehension Expression :  
+ > any(is_prime(x) for x in range(1328,1366))   
+
+ Check if every name in iterable is a title , meaning starting with a Capital letter  
+ > all(   name == name.title() for name in ['London','Amsterdam','Sydney','New York']  )  
+
+ #### 7.4.2 zip 
+ 
+ Bind Iterables together  
+ 
+ |Iterable|Sample Data|  
+ |---|---|  
+ |firstname|["Satadru","Christiano","Roger","Virat"]|  
+ |lastname|["Basu","Ronaldo","Federrer","Kohli"]|  
+ |empid|["EMP0010","EMP0011","EMP0012","EMP0013"]|  
+ 
+  ```   
+  firstname = ["Satadru","Christiano","Roger","Virat"]  
+  lastname = ["Basu","Ronaldo","Federrer","Kohli"]  
+  empid =["EMP0010","EMP0011","EMP0012","EMP0013"]  
+  ```  
+
+  > for item in zip(firstname,lastname,empid):  
+  >      print(f"{item}")  
