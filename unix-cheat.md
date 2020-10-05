@@ -24,3 +24,7 @@ Note: the sed command prints the contents of the file on terminal by removing th
 ## AWK ##
 
 https://www.geeksforgeeks.org/awk-command-unixlinux-examples/
+
+|Description| Command|
+|---|---|
+|Use a custom single char Field Separator(:) and print 3rd column from a file|cat read.txt | awk -F ':' '{print $3}'|
