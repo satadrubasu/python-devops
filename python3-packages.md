@@ -59,16 +59,14 @@ https://pypi.org  - list of all available libraries
  It will create dedicated python interpretor / pip and libraries  
   >  virtualenv -p python3 basepython3  
  
- Go inside the bin folder and run the activate.sh which activates this venv.  
-   >  ./basepython3/bin/activate.sh  
-  
-  On linux/Mac OS  
-   > . <venv>/bin/activate  
+ Go inside the bin folder and run the __activate__ which activates this venv.  
+ On linux/Mac OS  
+   > . ~/venvs/<venv>/bin/activate  
  
  Now when we run python or pip , it will refer to the version in this venv  
    > python -V  OR pip -V    
    > python -m pip list    
-   >  ./basepython3/bin/deactivate.sh    
+   >  . ~/venvs/<venv>/bin/deactivate    
  
 #### To create a dump of an env with current state of dependencies. Create a new file  __requirements.txt__.  
   > python -m pip freeze > requirements.txt    
