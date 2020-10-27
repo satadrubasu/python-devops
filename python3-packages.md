@@ -16,8 +16,7 @@
 
 ## 1. PIP <a name="pip"></a>
 
-Thirdparty dependency library package manager.  
-Always Install pip on venv and not pollute different projects  
+Thirdparty dependency library package manager. Always Install pip on venv and not pollute different projects  
 https://pypi.org  - list of all available libraries  
  
    - Find , Download , Install
@@ -25,35 +24,50 @@ https://pypi.org  - list of all available libraries
    
  Check if pip is installed:  
  > pip -V  
-
  > pip list  
-
- > pip uninstall <pkg1> <pkg2>
-    
- > pip show <pkgname>
- 
- Better way to call pip if a machine hqs both python2 and python3  
- 
- > python3 -m pip install <pkgname>  
-
- ### Where does the package get installed 
- 
- sys.path = '','/usr/lib/python3.7','usr/local/lib/python2.7/dist-packages'
- 
+ > pip uninstall <pkg1> <pkg2>  
  > pip show <pkgname>  
-
- Shows the location as :   
- Location: /Library/Python/2.7/site-packages
-   
  
-## 2 virtualenv  <a name="venv"></a>
+ #### Better way to call pip if a machine has both python2 and python3  
+ 
+ > python3 -m pip list  
+ > python -m pip list  
+ > python3 -m install <pkgname>  
+ > python -m install <pkgname>  
+
+ ### Where does the package get installed  
+ 
+ sys.path = '','/usr/lib/python3.7','usr/local/lib/python2.7/dist-packages'  
+ 
+ > pip show <pkgname> 
+
+   Shows the location as :   
+   Location: /Library/Python/2.7/site-packages  
+   
+## 2 virtualenv  <a name="venv"></a>  
 
  Isolated context for installing packages. Always work inside venvs.  
  Contain packages,tools,python etc  
  Keep them separate from Project source code.
   
  Install the virtualenv at a system level  :
- > python -m pip install virtualenv  
+ > sudo python -m pip install virtualenv  
+ 
+ Create a base venv folder in the system under which all venvs can br created.  
+ >  mkdir -p ~/venvs
+ 
+ Inside the venvs folder use the **virtualenv** command to create as many.  
+ It will create dedicated python interpretor / pip and libraries  
+ >  virtualenv -p python3 basepython3  
+ 
+ Go inside the bin folder and run the activate.sh which activates this venv.  
+  >  ./basepython3/bin/activate.sh  
+ 
+ Now when we run python or pip , it will refer to the version in this venv  
+   > python -V  OR pip -V  
+   > python -m pip list  
+   >  ./basepython3/bin/deactivate.sh  
+ 
 
 To create a dump of an environment with current state of dependencies. This will create a new file called __requirements.txt__.  
 > python -m pip freeze > requirements.txt  
