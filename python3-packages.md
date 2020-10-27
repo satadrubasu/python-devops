@@ -50,18 +50,20 @@ https://pypi.org  - list of all available libraries
  Contain packages,tools,python etc  
  Keep them separate from Project source code.
   
- Install the virtualenv at a system level  :
- > sudo python -m pip install virtualenv  
+ #### Install the virtualenv at a system level  :
+  > sudo python -m pip install virtualenv  
  
- Create a base venv folder in the system under which all venvs can br created.  
- >  mkdir -p ~/venvs
+ #### Create a base venv folder in the system under which all venvs can br created.  
+  >  mkdir -p ~/venvs
  
  Inside the venvs folder use the **virtualenv** command to create as many.  
  It will create dedicated python interpretor / pip and libraries  
- >  virtualenv -p python3 basepython3  
+  >  virtualenv -p python3 basepython3  
  
  Go inside the bin folder and run the activate.sh which activates this venv.  
-  >  ./basepython3/bin/activate.sh  
+   >  ./basepython3/bin/activate.sh  
+    On linux/Mac OS
+   > . <venv>/bin/activate
  
  Now when we run python or pip , it will refer to the version in this venv  
    > python -V  OR pip -V  
@@ -69,11 +71,11 @@ https://pypi.org  - list of all available libraries
    >  ./basepython3/bin/deactivate.sh  
  
 
-To create a dump of an environment with current state of dependencies. This will create a new file called __requirements.txt__.  
-> python -m pip freeze > requirements.txt  
+#### To create a dump of an env with current state of dependencies. Create a new file  __requirements.txt__.  
+  > python -m pip freeze > requirements.txt    
  
-To import the dependencies used in another environment to current use the requirements.txt as  
-> python -m pip install -r requirements.txt  
+ To import the dependencies used in another environment to current use the requirements.txt as  
+  > python -m pip install -r requirements.txt  
  
 #### 2.1 Projects and VirtualEnvs
 
