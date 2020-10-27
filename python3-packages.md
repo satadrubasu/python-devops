@@ -1,6 +1,5 @@
 
-##  Package Management in python
-
+##  Package Management in python  
    - PIP
    - Virtualenv
    - virtualenvwrapper
@@ -62,20 +61,27 @@ https://pypi.org  - list of all available libraries
  
  Go inside the bin folder and run the activate.sh which activates this venv.  
    >  ./basepython3/bin/activate.sh  
-    On linux/Mac OS
-   > . <venv>/bin/activate
+  
+  On linux/Mac OS  
+   > . <venv>/bin/activate  
  
  Now when we run python or pip , it will refer to the version in this venv  
-   > python -V  OR pip -V  
-   > python -m pip list  
-   >  ./basepython3/bin/deactivate.sh  
+   > python -V  OR pip -V    
+   > python -m pip list    
+   >  ./basepython3/bin/deactivate.sh    
  
-
 #### To create a dump of an env with current state of dependencies. Create a new file  __requirements.txt__.  
   > python -m pip freeze > requirements.txt    
  
  To import the dependencies used in another environment to current use the requirements.txt as  
   > python -m pip install -r requirements.txt  
+  
+  SPECIFYING VERSIONS in requirements.txt  
+   ```
+     module == 1.2.1
+     module >= 1.2.1
+     module != 1.2.1
+   ```
  
 #### 2.1 Projects and VirtualEnvs
 
