@@ -1,0 +1,7 @@
+#host variables for [tools] vm
+---
+become_user=ubuntu
+become_ask_pass: True
+
+ansible_host: 172.18.28.85
+ansible_become: false
