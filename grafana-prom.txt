@@ -16,7 +16,7 @@ Note: Will name every docker container so that we can create a docker overlay ne
 
 [Step-2] - Node Exporter as docker container ( port 9100 )
 
- ->  docker run -d -p 9100:9100 prom/node-exporter --name local_nodeexport
+ ->  docker run --name local_nodeexport -d -p 9100:9100 prom/node-exporter 
  ->  docker network connect promNetwork local_nodeexport
  
 [Step-3] - Prometheus with External prometheus.yml file on machine:
@@ -58,11 +58,11 @@ scrape_configs:
  
  
  ii) Run the container :
-   -->  docker run -p 9090:9090 -v /Users/satbasu/dev/dockerMounts/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus --name local_prom
+   -->  docker run --name local_prom -d -p 9090:9090 -v /Users/satbasu/dev/dockerMounts/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
    --> docker network connect promNetwork local_prom
 
- [Step-4] - Grafana COntainer with name local_grafana
+ [Step-4] - Grafana Container with name local_grafana
   
-   --> docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" grafana/grafana --name local_grafana
+   --> docker run --name local_grafana -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" grafana/grafana 
    --> docker network connect promNetwork local_grafana
   
