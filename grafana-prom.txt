@@ -1,0 +1,68 @@
+
+### LOCAL MACHINE NODEEXPORTER | PROM | Grafana Setup
+
+Note: Will name every docker container so that we can create a docker overlay network and have communication going.
+   Else we come across situations where the loopback address doesn't let prometheus reach other scrape endpoints though on the same machine.
+   
+   
+[Step-1]  Have Docker Desktop running on your macine and create a docker Overlay Network:
+  After creating and connecting containers to the overlay network, they should be accessible from one another by their Docker name
+  
+  --> docker network create promNetwork
+    --> docker network connect promNetwork <prometheus_container_name>
+    --> docker network connect promNetwork <node_exporter_container_name>
+    --> docker network connect promNetwork <grafana_container_name>
+
+
+[Step-2] - Node Exporter as docker container ( port 9100 )
+
+ ->  docker run -d -p 9100:9100 prom/node-exporter --name local_nodeexport
+ ->  docker network connect promNetwork local_nodeexport
+ 
+[Step-3] - Prometheus with External prometheus.yml file on machine:
+ 
+ i) Configure the prometheus.yml : and use the container names
+     Names:
+      local_nodeexport
+      local_prom
+      local_grafana
+      
+---------------
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  - job_name: 'node_exporter'
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['local_nodeexport:9100']
+----------------
+ 
+ 
+ ii) Run the container :
+   -->  docker run -p 9090:9090 -v /Users/satbasu/dev/dockerMounts/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus --name local_prom
+   --> docker network connect promNetwork local_prom
+
+ [Step-4] - Grafana COntainer with name local_grafana
+  
+   --> docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" grafana/grafana --name local_grafana
+   --> docker network connect promNetwork local_grafana
+  
