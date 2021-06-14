@@ -55,8 +55,7 @@ scrape_configs:
     static_configs:
     - targets: ['local_nodeexport:9100']
 ----------------
- 
- 
+  
  ii) Run the container :
    -->  docker run --name local_prom -d -p 9090:9090 -v /Users/satbasu/dev/dockerMounts/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
    --> docker network connect promNetwork local_prom
@@ -65,4 +64,8 @@ scrape_configs:
   
    --> docker run --name local_grafana -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" grafana/grafana 
    --> docker network connect promNetwork local_grafana
+   
+ ======== References =======
+ node_exporter - default dashboard -- https://grafana.com/grafana/dashboards/1860
+ 
   
