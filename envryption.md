@@ -10,10 +10,10 @@
  - Cannot encrypt a filesize greater than the size used for key = 2048 (here)
  
  Encrypt using the public key  
-  > openssl rsault -encrypt -inkey public.pem -pubin -in sample.txt -out sample.ssl  
+  > openssl rsautl -encrypt -inkey public.pem -pubin -in sample.txt -out sample.ssl  
   
  Decrypt using the private key
-  > openssl rsault -decrypt -inkey private.pem -in sample.ssl -out sample_regen.txt 
+  > openssl rsautl -decrypt -inkey private.pem -in sample.ssl -out sample_regen.txt 
   
   
   
