@@ -1,8 +1,7 @@
-
-## Setting up Ansible on control Node 
+## 1. Setting up Ansible on control Node 
   > python3 -m pip install ansible 
 
-## Ansible Configuration File ( Controlling COnnections to Managed Hosts )
+## 2. Ansible Configuration File ( Controlling COnnections to Managed Hosts )
   Set defaults on : 
   |Sno|Description|
   |---|---|
@@ -15,16 +14,16 @@
   |6c|Prompt for an SSH password to login/sudo or use keys|
   
 
-  ### ansible.cfg ( ansible --version )
+### 2.1 Load of config priority for ansible.cfg ( ansible --version )  
   
     > ansible --version  (SHows the configuration in use )
      
-   i) ENV Variable - ANSIBLE_CONFIG set to path
-        --> ii) current working dir
-           --> iii) ~/.ansible.cfg
-              -->  iv) Else default location : /etc/ansible/ansible.cfg
+   - ENV Variable - ANSIBLE_CONFIG set to path  
+   - current working dir  
+   - ~/.ansible.cfg  
+   - Else default location : /etc/ansible/ansible.cfg  
 
-###  ansible.cfg SECTIONS : 
+### 2.2 ansible.cfg SECTIONS :   
    ```
    [defaults]
    inventory = ./inventory
@@ -38,7 +37,31 @@
    become_ask_pass = no ( default) if ask for pwd
    
    ```
-   
+ 
+ ### 2.3 ansible.cfg ( HOST based variables )  
+  The inventory should have same hostname as the filename in host_vars.    
+ 
+ ```
+   Base Folder
+    |-- ansible.cfg
+    |-- host_vars
+    |    |-- server1.aws.com
+    |    |-- server2.aws.com
+    |-- inventory ( has mention by same hostname as file inside the host_vars )
+  ``` 
+  
+   Content of the host_override_file ( server1.aws.com )  
+     these settings override the ones in ansible.cfg    
+  
+   ```
+    ansible_host= different ip or hostname to use for the connection to host overriding inventory
+    ansible_port=
+    ansible_user=ubuntu
+    ansible_become=true
+    ansible_become_user=root
+    ansible_become_method=sudo
+   ```
+  
    
 
 ### Inventory  
@@ -48,96 +71,146 @@
   - Written in INI or YAML  
   - Static Inventory  
   - Dynamic Inventory ( automatically generated and updated )  
-
-### Location of Inventory    
-   Controlled by ansible config
-   > ~/.ansible/ansible.cfg
+  
+  ```
+  [web]
+  web01
+  web02
+  
+  [databases]
+  db[01:02]
+  
+  ```
 
     
 ## Hosts and Ranges
-  - Ranges match  all values from [START:END]  
+  - Ranges match all values from [START:END]  
   - 192.168.[4:7].[0:255] 
     server[01:10].domain.com
     [a:c]name.domain.com
     
  List an inventory in yaml format     
   > ansible-inventory -y --list
-
-
-
- 
-
-    
-  ### Connection Settings
-  
-    Setting to control the SSH can go into the [defaults] section  
-    - remote_user
-    - remote_port 
-    - ask_pass ( use key based auth )
-    
-  #### Priviledge Escalation   
-   
-     |Item | Description |  
-     |---|---|  
-     |become|1.1.1.1|  
-     |become_user|user to switch to on the managed host|  
-     |become_method| (sudo ) how to become that user by sudo)default) or su etc|  
-     |become_ask_pass|false|  
-     
-     ```
-       --- < Sample ansible.cfg > ---
-     [defaults]
-     inventory = ./inventory
-     remote_user = ansible
-     become_ask_pass = false
-     
-     [priviledge_escalation]
-     become = true  
-     become_user = root  
-     become_ask_pass = false  
-     ```
-    
-    
-        
- ## Host-Based Connection Variables
-   - place setting in a file in the host_vars dir in the same as inventory file.  
-   - hosts should appear with those names in the inventory  
-   - these settings override the ones in ansible.cfg  
-   
-   |Item | Description |
-   |---|---|
-   |ansible_host|1.1.1.1|
-   |ansible_port|34101|
-   |ansible_user|root|
-   |ansible_become|false|
-   
-   ```
-   project   
-    |--ansible.cfg  
-    |--host_vars  
-    |    |--server1.com  
-    |--inventory  ( has mention by same hostname as file inside the host_vars )  
-   ```
- 
- 
   > ansible <group> --limit <host> -m ping  
-  
   > ansible-config dump --only-changed    
   > ansible -m user -a'name=nebiw uid=40 state=present' server.com  
 
 
-## Ansible Adhoc
+## Ansible Adhoc Commands
  Some adhoc command line params for override  
+  > ansible host-pattern -m module [-a 'module args'] [-i inventory]  
+  > ansible all -m ping
+  
+|Command|description|
+|---|---|
+|ansible --version| confirm the ansible.cfg file that will be loaded during execution from this location|
+|ansible all -i inventory -m ping|ping all hosts in  inventory|
+|ansible all --limit web01 -i inventory -k -m ping| limit server and seek password|
+|ansible-doc -l \| grep ping | check the documentatin of the ping module |
+  
  
  |Item|Desc|  
  |---|---|
- |-k| prompt for the conn password|
+ |-k| --ask-pass prompt for the conn password|
  |-u| override the remote_user setting in ansible.cfg|
- |-b| enable priviledge esc , become:yes|
- |-K| prompt priviledge escalation password|
+ |-b| become:True |
+ |-K| --ask-become-pass prompt priviledge escalation password|
  |--become-method| sudo by default|
  
+### Common Modules  
+  
+ >  ansible all -m package -a'name=httpd state=present'  
+ >  ansible localhost -m command -a /usr/bin/hostname
+ >  ansible localhost -m shell -a /usr/bin/hostname
+  
+  
+## 3. Ansible Playbooks (.yml 2 spaces )
  
+ > ansible-playbook sample.yml --limit server2
+ > ansible-playbook --syntax-check sample.yml  
+ > ansible-playbook -C sample.yml   (dry run) 
+  
+ ```
+ ---
+ - name : Example playbook
+   hosts: all 
+   become: yes
+   tasks:
+     - name: user exists with UIO 4000
+       user:
+         name: newuser
+         uid: 4000
+         state: present
+ ```
  
-  > ansible all -m ping
-  > ansible -
+### 3.1 Playbook Variables (letter | number | _ only ):
+  
+  Scope:
+   Global -> every host
+   Host -> Host specific
+   Play -> all hosts in current play (local file )
+  
+  ```
+  - hosts: all
+    vars: 
+      user_name: sat
+      user_state: present
+  ```
+  
+  OR  
+  
+  ```
+   - hosts: all
+     vars_files:
+       - vars/users.yml
+  ```
+   To use the variable : 
+  ```
+  tasks:
+  - name: Create the user {{ user_name }}
+    user:
+      name: "{{ user_name }}"
+  ```
+  
+### 3.2 Host Variables & Group Variables
+    
+  ```
+   project
+     |-- inventory
+     |     |-- host_vars/
+     |             |------ server1.aws.com
+     |             |------ server2.aws.com
+     |     |-- group_vars/
+     |             |------ all
+     |             |------ datacenter-1
+     |--- playbook.yml
+  ```
+  
+### 3.3 Defining Variables in Playbooks  
+    The packages will expand to the list provided in vars and auto loop through.  
+  
+   ```
+    - name: Install Packages
+      hosts: all
+      vars:
+        packages:
+          - httpd
+          - nmap
+          - mod_ssl
+      tasks:
+        - name: Install software
+          yum:
+            name: "{{ packages }}"  
+    ```
+   
+### 3.4 Capture Output with Register 
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
