@@ -1,4 +1,45 @@
 
+## Setting up Ansible on control Node 
+  > python3 -m pip install ansible 
+
+## Ansible Configuration File ( Controlling COnnections to Managed Hosts )
+  Set defaults on : 
+  |Sno|Description|
+  |---|---|
+  |1|Location of inventory file|
+  |2|Connection protocol to use (SSH)|
+  |3|if a non-standard network port to connect to server|
+  |4|what user is can login as|
+  |5a|if user is not root - if Ansible should escalate to root|
+  |6b|How ansible becomes root - default sudo|
+  |6c|Prompt for an SSH password to login/sudo or use keys|
+  
+
+  ### ansible.cfg ( ansible --version )
+  
+    > ansible --version  (SHows the configuration in use )
+     
+   i) ENV Variable - ANSIBLE_CONFIG set to path
+        --> ii) current working dir
+           --> iii) ~/.ansible.cfg
+              -->  iv) Else default location : /etc/ansible/ansible.cfg
+
+###  ansible.cfg SECTIONS : 
+   ```
+   [defaults]
+   inventory = ./inventory
+   remote_user = ubuntu
+   remote_port = 22 ( default ssh )
+   ask_pass
+   [priviliedge_escalation]
+   become = false | true ( by default be the become_user or not )
+   become_user = root ( default ) what user on the mansged host Ansible shud become
+   become_method = sudo ( default ) or su
+   become_ask_pass = no ( default) if ask for pwd
+   
+   ```
+   
+   
 
 ### Inventory  
   - Collection of hosts  
@@ -23,16 +64,9 @@
   > ansible-inventory -y --list
 
 
-## Ansible
- - Configuration file 
- - Connection Control
- - Use priviledge escalation
+
  
-  ### Ansible Configuration ( ansible --version )
-    i) ENV Variable - ANSIBLE_CONFIG set to path
-    ii) Current working dir
-    iii) ~/.ansible.cfg
-    iv) Else default location
+
     
   ### Connection Settings
   
