@@ -64,7 +64,7 @@
   
    
 
-### Inventory  
+### 2.4 Inventory  
   - Collection of hosts  
   - Groups / Child Groups ( no Dashes only underscores )  
     [india:delhi]  
@@ -83,7 +83,7 @@
   ```
 
     
-## Hosts and Ranges
+### 2.5 Hosts and Ranges
   - Ranges match all values from [START:END]  
   - 192.168.[4:7].[0:255] 
     server[01:10].domain.com
@@ -96,7 +96,7 @@
   > ansible -m user -a'name=nebiw uid=40 state=present' server.com  
 
 
-## Ansible Adhoc Commands
+ ## 3 Ansible Adhoc Commands
  Some adhoc command line params for override  
   > ansible host-pattern -m module [-a 'module args'] [-i inventory]  
   > ansible all -m ping
@@ -124,7 +124,7 @@
  >  ansible localhost -m shell -a /usr/bin/hostname
   
   
-## 3. Ansible Playbooks (.yml 2 spaces )
+## 4. Ansible Playbooks (.yml 2 spaces )
  
  > ansible-playbook sample.yml --limit server2
  > ansible-playbook --syntax-check sample.yml  
@@ -143,38 +143,40 @@
          state: present
  ```
  
-### 3.1 Playbook Variables (letter | number | _ only ):
+### 4.1 Playbook Variables (letter | number | _ only ):
   
-  Scope:
-   Global -> every host
-   Host -> Host specific
-   Play -> all hosts in current play (local file )
+  Scope:  
+   Global -> every host  
+   Host -> Host specific  
+   Play -> all hosts in current play (local file )  
   
-  ```
+```
   - hosts: all
     vars: 
       user_name: sat
       user_state: present
-  ```
+```
   
   OR  
   
-  ```
+```
    - hosts: all
      vars_files:
        - vars/users.yml
-  ```
-   To use the variable : 
-  ```
+```
+  
+  To use the variable : 
+  
+```
   tasks:
   - name: Create the user {{ user_name }}
     user:
       name: "{{ user_name }}"
-  ```
+```
   
-### 3.2 Host Variables & Group Variables
+### 4.2 Host Variables & Group Variables
     
-  ```
+```
    project
      |-- inventory
      |     |-- host_vars/
@@ -184,12 +186,12 @@
      |             |------ all
      |             |------ datacenter-1
      |--- playbook.yml
-  ```
+```
   
-### 3.3 Defining Variables in Playbooks  
+### 4.3 Defining Variables in Playbooks  
     The packages will expand to the list provided in vars and auto loop through.  
   
-   ```
+```
     - name: Install Packages
       hosts: all
       vars:
@@ -201,9 +203,46 @@
         - name: Install software
           yum:
             name: "{{ packages }}"  
-    ```
+```
    
-### 3.4 Capture Output with Register 
+### 4.4 Capture Output with Register  
+  
+## 5. Sensitive Data (Encrypted files )  
+  
+  Will need a password to work with :  
+  
+   |Command|Desc|
+   |---|---|
+   |ansible-vault create filename|Create new|
+   |ansible-vault view filename|view |
+   |ansible-vault edit filename|edit |
+   |ansible-vault encrypt existingfile |encrypt existing non encrypted|
+   |ansible-vault decrypt filename |decrypt|
+   |ansible-vault rekey filename |change password|  
+   
+   > ansible-playbook --vault-id @prompt filename  
+  
+  ```
+  vi mysecret.file   
+  secretpassword: catchme@123   
+  ```  
+  
+  Encrypt and use the value for secretpassword:  
+
+  > ansible-vault encrypt mysecret.file  
+  
+ ```
+   tasks:  
+     - name: Load variable from encrypted file  
+       include_vars:  
+         file: mysecret.file  
+     - name: Display the encrypted variable  
+       debug:  
+         msg: "{{ secretpassword }}"  
+ ```
+ 
+  To ensure the vault password is asked before execution  
+  > ansible-playbook --ask-vault-pass sample.yml
   
   
 
