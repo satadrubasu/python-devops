@@ -245,6 +245,16 @@
   > ansible-playbook --ask-vault-pass sample.yml
   
   
+  ## 6 Roles  
+  
+  1. Create role directory structure.  
+  2. Define the role content.  
+  3. Usde the role in a play.  
+  
+  Iitialize skeleton folder structure :  
+   >  ansible-galaxy init rolename  
+   
+  
 
   
   
